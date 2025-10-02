@@ -1,40 +1,57 @@
-<script>
-  const API_URL = "https://script.google.com/macros/s/PASTE_EXEC_URL/exec"; // URL-ul Web App (…/exec)
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Programări Poliție</title>
+  <style>
+    body{font-family:'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;margin:0;display:flex;min-height:100vh;align-items:center;justify-content:center}
+    .wrap{width:92%;max-width:460px;background:#151515;padding:32px;border-radius:16px;box-shadow:0 0 28px rgba(255,215,0,.25);border:1px solid rgba(255,215,0,.25)}
+    h2{text-align:center;color:#ffd700;margin:0 0 18px;text-transform:uppercase;letter-spacing:.5px;text-shadow:0 0 8px #ffd700}
+    label{display:block;margin-top:12px;font-weight:600;color:#ddd}
+    input,textarea{width:100%;margin-top:6px;padding:12px;border-radius:10px;border:1px solid rgba(255,215,0,.3);background:#0f0f0f;color:#fff}
+    textarea{resize:none;height:90px}
+    input::placeholder,textarea::placeholder{color:#888}
+    button{margin-top:18px;width:100%;padding:13px;border-radius:12px;border:0;background:linear-gradient(135deg,#ffd700,#ffa500);color:#111;font-weight:800;text-transform:uppercase;box-shadow:0 0 15px rgba(255,215,0,.6);cursor:pointer}
+    button:hover{transform:scale(1.02)}
+    #msg{margin-top:14px;text-align:center;font-weight:700}
+    .footer{margin-top:18px;text-align:center;color:#ffd700;opacity:.8;font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h2>📋 Programări Poliție</h2>
 
-  const SECRET = "SUPER_SECRETA_TA_LUNGA"; // aceeași și în Replit
+    <!-- Honeypot anti-bot (las-o, nu deranjează) -->
+    <input type="text" id="hp_field" style="display:none">
 
-  document.getElementById("send").addEventListener("click", async () => {
-    const data = {
-      id: document.getElementById("id").value.trim(),
-      nume: document.getElementById("nume").value.trim(),
-      discord: document.getElementById("discord").value.trim(),
-      telefon: document.getElementById("telefon").value.trim(),
-      mentiuni: document.getElementById("mentiuni").value.trim(),
-      hp_field: document.getElementById("hp_field")?.value || "",
-      secret: SECRET
-    };
+    <label>ID-ul Tău</label>
+    <input id="id" maxlength="10" required placeholder="37987">
 
-    // validări minime
-    if (!/^\d{3,10}$/.test(data.id)) return show("⚠️ ID invalid");
-    if (!(data.nume.length >= 2 && data.nume.length <= 50)) return show("⚠️ Nume invalid");
+    <label>Numele Tău IC</label>
+    <input id="nume" maxlength="50" required placeholder="Borgov Dimitri">
 
-    try {
-      await fetch(API_URL, {
-        method: "POST",
-        // evităm preflight-ul CORS
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify(data),
-        // opțional (și mai safe față de CORS):
-        // mode: "no-cors"
-      });
-      show("✔ Felicitări, ai fost programat! Așteaptă să fii contactat.", true);
-    } catch (e) {
-      show("❌ Nu s-a putut trimite. Încearcă mai târziu.");
-    }
+    <label>Discordul Tău</label>
+    <input id="discord" maxlength="50" required placeholder="Laur70">
+
+    <label>Telefon</label>
+    <input id="telefon" maxlength="15" placeholder="0712 345 678">
+
+    <label>Mențiuni</label>
+    <textarea id="mentiuni" maxlength="300" placeholder="Aplic pentru testul ANP, disponibil 20:00–21:00."></textarea>
+
+    <button id="send">✅ Programează-te</button>
+    <div id="msg"></div>
+
+    <div class="footer">© OGLand România — Made by Laur70</div>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbyAo8a2nVHy5jJ70tFnwl-J1ShLzSce05la1QPpVZkehiYon_srL2Sl56w-aV7UzUea/exec"; // <<— înlocuiește
 
     function show(t, ok=false){
       document.getElementById("msg").innerHTML =
         `<span style="color:${ok?'lime':'#ff6b6b'}">${t}</span>`;
     }
-  });
-</script>
+
+    document.getElementById("send").addEventListen
