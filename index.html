@@ -46,39 +46,56 @@
     <div class="footer">© OGLand România — Made by Laur70</div>
   </div>
 
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbw69xTh-194gWEzCjne7a991pVIwUn7UvfhpSM6xeFvJJ8mwwIK_h8SWLfcMXeNECFs/exec";
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbw69xTh-194gWEzCjne7a991pVIwUn7UvfhpSM6xeFvJJ8mwwIK_h8SWLfcMXeNECFs/exec";
 
-    function show(t, ok=false){
-      document.getElementById("msg").innerHTML =
-        `<span style="color:${ok?'lime':'#ff6b6b'}">${t}</span>`;
-    }
+  function show(t, ok=false){
+    document.getElementById("msg").innerHTML =
+      `<span style="color:${ok?'lime':'#ff6b6b'}">${t}</span>`;
+  }
 
-    document.getElementById("send").addEventListener("click", async () => {
-      const data = {
-        id: document.getElementById("id").value.trim(),
-        nume: document.getElementById("nume").value.trim(),
-        discord: document.getElementById("discord").value.trim(),
-        telefon: document.getElementById("telefon").value.trim(),
-        mentiuni: document.getElementById("mentiuni").value.trim(),
-        hp_field: document.getElementById("hp_field")?.value || ""
-      };
+  document.getElementById("send").addEventListener("click", async () => {
+    const data = {
+      id:       document.getElementById("id").value.trim(),
+      nume:     document.getElementById("nume").value.trim(),
+      discord:  document.getElementById("discord").value.trim(),
+      telefon:  document.getElementById("telefon").value.trim(),
+      mentiuni: document.getElementById("mentiuni").value.trim(),
+      hp_field: document.getElementById("hp_field")?.value || ""
+    };
 
-      if (!/^\d{3,10}$/.test(data.id)) return show("⚠️ ID invalid");
-      if (!(data.nume.length >= 2 && data.nume.length <= 50)) return show("⚠️ Nume invalid");
+    if (!/^\d{3,10}$/.test(data.id))  return show("⚠️ ID invalid");
+    if (!(data.nume.length>=2 && data.nume.length<=50)) return show("⚠️ Nume invalid");
 
+    try {
+      show("⏳ Trimit…");
+      const resp = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" }, // evită CORS preflight
+        body: JSON.stringify(data)
+      });
+
+      console.log("POST → Apps Script:", resp.type, resp.status);
+      // încercăm să citim răspunsul (poate fi blocat de CORS; nu e grav)
+      let okResp = false;
       try {
-        // text/plain ca să evităm CORS preflight
-        await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify(data)
-        });
-        show("✔ Felicitări, ai fost programat! Așteaptă să fii contactat.", true);
-      } catch (e) {
-        show("❌ Nu s-a putut trimite. Încearcă mai târziu.");
+        const json = await resp.json();
+        console.log("Server JSON:", json);
+        okResp = json && json.ok;
+      } catch(e) {
+        console.log("JSON read blocked by CORS (ok).");
       }
-    });
-  </script>
+
+      if (resp.ok || okResp) {
+        show("✔ Felicitări, ai fost programat! Așteaptă să fii contactat.", true);
+      } else {
+        show("❌ Server Apps Script indisponibil.");
+      }
+    } catch (err) {
+      console.error("Network error:", err);
+      show("❌ Nu s-a putut trimite. Verifică API_URL / conexiunea.");
+    }
+  });
+</script>
 </body>
 </html>
