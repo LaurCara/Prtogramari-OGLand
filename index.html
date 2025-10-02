@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Programări Poliție</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a, #000000);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+
+    .container {
+      background: rgba(15, 15, 15, 0.95);
+      padding: 35px 40px;
+      border-radius: 18px;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.6), 0 0 60px rgba(255, 215, 0, 0.2);
+      width: 420px;
+      animation: fadeIn 0.8s ease-in-out;
+      border: 1px solid rgba(255, 215, 0, 0.4);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    h2 {
+      text-align: center;
+      color: #FFD700;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+      font-size: 22px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px #FFD700, 0 0 20px #ffea00;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 10px;
+      background: #111;
+      color: #fff;
+      font-size: 15px;
+      transition: 0.2s ease-in-out;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #888;
+      font-style: italic;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border: 1px solid #FFD700;
+      box-shadow: 0 0 10px #FFD700, 0 0 20px rgba(255, 215, 0, 0.6);
+      transform: scale(1.02);
+    }
+
+    textarea {
+      resize: none;
+      height: 80px;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+      color: #111;
+      text-transform: uppercase;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #e6c200, #ff8c00);
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+    }
+
+    #msg {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .footer {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 13px;
+      color: #FFD700;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📋 Programări Poliție</h2>
+    <input id="id" type="text" required placeholder="ID-ul tău: 37987">
+    <input id="nume" type="text" required placeholder="Numele Tău IC: Borgov Dimitri">
+    <input id="discord" type="text" required placeholder="Discordul Tău: Laur70">
+    <input id="telefon" type="text" placeholder="Telefon: 0712 345 678">
+    <textarea id="mentiuni" placeholder="Mențiuni: Aplic pentru testul ANP, disponibil în seara asta de la 20:00-21:00."></textarea>
+    <button onclick="submitForm()">✅ Programează-te</button>
+    <div id="msg"></div>
+  </div>
+
+  <div class="footer">
+    © OGLand România — Made by Laur70
+  </div>
+
+  <script>
+    function submitForm() {
+      const data = {
+        id: document.getElementById("id").value,
+        nume: document.getElementById("nume").value,
+        discord: document.getElementById("discord").value,
+        telefon: document.getElementById("telefon").value,
+        mentiuni: document.getElementById("mentiuni").value
+      };
+
+      google.script.run.withSuccessHandler(function(response) {
+        if (response === "success") {
+          document.getElementById("msg").innerHTML = 
+            "<span style='color:lime'>✔ Felicitări, ai fost programat! Așteaptă să fii contactat.</span>";
+        } else {
+          document.getElementById("msg").innerHTML = 
+            "<span style='color:red'>❌ Din nefericire am depistat o eroare. Încercați mai târziu...</span>";
+        }
+      }).addEntry(data);
+    }
+  </script>
+</body>
+</html>
