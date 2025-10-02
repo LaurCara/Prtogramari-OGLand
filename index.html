@@ -68,34 +68,22 @@
     if (!(data.nume.length>=2 && data.nume.length<=50)) return show("⚠️ Nume invalid");
 
     try {
-      show("⏳ Trimit…");
+      // Trimitem ca application/x-www-form-urlencoded -> e.parameter va fi populat
+      const form = new URLSearchParams();
+      Object.entries(data).forEach(([k, v]) => form.append(k, v));
+
       const resp = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "text/plain" }, // evită CORS preflight
-        body: JSON.stringify(data)
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: form.toString()
       });
 
-      console.log("POST → Apps Script:", resp.type, resp.status);
-      // încercăm să citim răspunsul (poate fi blocat de CORS; nu e grav)
-      let okResp = false;
-      try {
-        const json = await resp.json();
-        console.log("Server JSON:", json);
-        okResp = json && json.ok;
-      } catch(e) {
-        console.log("JSON read blocked by CORS (ok).");
-      }
-
-      if (resp.ok || okResp) {
-        show("✔ Felicitări, ai fost programat! Așteaptă să fii contactat.", true);
-      } else {
-        show("❌ Server Apps Script indisponibil.");
-      }
-    } catch (err) {
-      console.error("Network error:", err);
-      show("❌ Nu s-a putut trimite. Verifică API_URL / conexiunea.");
+      show("✔ Felicitări, ai fost programat! Așteaptă să fii contactat.", true);
+    } catch (e) {
+      show("❌ Nu s-a putut trimite. Încearcă mai târziu.");
     }
   });
 </script>
+
 </body>
 </html>
