@@ -6,11 +6,11 @@
   <title>Programări Poliție</title>
   <style>
     body{font-family:'Segoe UI',sans-serif;background:#0a0a0a;color:#fff;margin:0;display:flex;min-height:100vh;align-items:center;justify-content:center}
-    .wrap{width:92%;max-width:460px;background:#151515;padding:32px;border-radius:16px;box-shadow:0 0 28px rgba(255,215,0,.25);border:1px solid rgba(255,215,0,.25)}
+    .wrap{width:92%;max-width:520px;background:#151515;padding:32px;border-radius:16px;box-shadow:0 0 28px rgba(255,215,0,.25);border:1px solid rgba(255,215,0,.25)}
     h2{text-align:center;color:#ffd700;margin:0 0 18px;text-transform:uppercase;letter-spacing:.5px;text-shadow:0 0 8px #ffd700}
     label{display:block;margin-top:12px;font-weight:600;color:#ddd}
     input,textarea{width:100%;margin-top:6px;padding:12px;border-radius:10px;border:1px solid rgba(255,215,0,.3);background:#0f0f0f;color:#fff}
-    textarea{resize:none;height:90px}
+    textarea{resize:none;height:100px}
     input::placeholder,textarea::placeholder{color:#888}
     button{margin-top:18px;width:100%;padding:13px;border-radius:12px;border:0;background:linear-gradient(135deg,#ffd700,#ffa500);color:#111;font-weight:800;text-transform:uppercase;box-shadow:0 0 15px rgba(255,215,0,.6);cursor:pointer}
     button:hover{transform:scale(1.02)}
@@ -22,7 +22,7 @@
   <div class="wrap">
     <h2>📋 Programări Poliție</h2>
 
-    <!-- Honeypot anti-bot (las-o, nu deranjează) -->
+    <!-- Honeypot anti-bot (invizibil) -->
     <input type="text" id="hp_field" style="display:none">
 
     <label>ID-ul Tău</label>
@@ -40,18 +40,45 @@
     <label>Mențiuni</label>
     <textarea id="mentiuni" maxlength="300" placeholder="Aplic pentru testul ANP, disponibil 20:00–21:00."></textarea>
 
-    <button id="send">✅ Programează-te</button>
+    <button id="send" type="button">✅ Programează-te</button>
     <div id="msg"></div>
 
     <div class="footer">© OGLand România — Made by Laur70</div>
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbyAo8a2nVHy5jJ70tFnwl-J1ShLzSce05la1QPpVZkehiYon_srL2Sl56w-aV7UzUea/exec"; // <<— înlocuiește
+    const API_URL = "https://script.google.com/macros/s/AKfycbw69xTh-194gWEzCjne7a991pVIwUn7UvfhpSM6xeFvJJ8mwwIK_h8SWLfcMXeNECFs/exec";
 
     function show(t, ok=false){
       document.getElementById("msg").innerHTML =
         `<span style="color:${ok?'lime':'#ff6b6b'}">${t}</span>`;
     }
 
-    document.getElementById("send").addEventListen
+    document.getElementById("send").addEventListener("click", async () => {
+      const data = {
+        id: document.getElementById("id").value.trim(),
+        nume: document.getElementById("nume").value.trim(),
+        discord: document.getElementById("discord").value.trim(),
+        telefon: document.getElementById("telefon").value.trim(),
+        mentiuni: document.getElementById("mentiuni").value.trim(),
+        hp_field: document.getElementById("hp_field")?.value || ""
+      };
+
+      if (!/^\d{3,10}$/.test(data.id)) return show("⚠️ ID invalid");
+      if (!(data.nume.length >= 2 && data.nume.length <= 50)) return show("⚠️ Nume invalid");
+
+      try {
+        // text/plain ca să evităm CORS preflight
+        await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify(data)
+        });
+        show("✔ Felicitări, ai fost programat! Așteaptă să fii contactat.", true);
+      } catch (e) {
+        show("❌ Nu s-a putut trimite. Încearcă mai târziu.");
+      }
+    });
+  </script>
+</body>
+</html>
